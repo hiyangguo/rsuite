@@ -24,20 +24,20 @@ describe('DateRangePicker', () => {
         ranges={[
           {
             label: 'Yesterday',
-            value: [addDays(new Date(), -1), addDays(new Date(), -1)]
+            value: [addDays(new Date(), -1), addDays(new Date(), -1)],
           },
           {
             label: 'Today',
-            value: [new Date(), new Date()]
+            value: [new Date(), new Date()],
           },
           {
             label: 'Tomorrow',
-            value: [addDays(new Date(), 1), addDays(new Date(), 1)]
+            value: [addDays(new Date(), 1), addDays(new Date(), 1)],
           },
           {
             label: 'Last 7 days',
-            value: [subDays(new Date(), 6), new Date()]
-          }
+            value: [subDays(new Date(), 6), new Date()],
+          },
         ]}
         disabledDate={() => true}
         open
@@ -56,7 +56,7 @@ describe('DateRangePicker', () => {
     const instance = getDOMNode(
       <DateRangePicker
         value={[parse('2019-04-01'), parse('2019-04-02')]}
-        renderValue={value => {
+        renderValue={(value) => {
           return `${format(value[0], 'MM/DD/YYYY')}~${format(value[1], 'MM/DD/YYYY')}`;
         }}
       />
@@ -68,7 +68,7 @@ describe('DateRangePicker', () => {
     );
   });
 
-  it('Should call `onChange` callback', done => {
+  it('Should call `onChange` callback', (done) => {
     const doneOp = () => {
       done();
     };
@@ -77,7 +77,7 @@ describe('DateRangePicker', () => {
     instance.updateValue([new Date(), new Date()]);
   });
 
-  it('Should call onClean callback', done => {
+  it('Should call onClean callback', (done) => {
     const doneOp = () => {
       done();
     };
@@ -88,7 +88,7 @@ describe('DateRangePicker', () => {
     ReactTestUtils.Simulate.click(instance.querySelector('.rs-picker-toggle-clean'));
   });
 
-  it('Should call `onOpen` callback', done => {
+  it('Should call `onOpen` callback', (done) => {
     const doneOp = () => {
       done();
     };
@@ -98,7 +98,7 @@ describe('DateRangePicker', () => {
     ReactTestUtils.Simulate.click(instance.querySelector('.rs-picker-toggle'));
   });
 
-  it('Should call `onOpen` callback', done => {
+  it('Should call `onOpen` callback', (done) => {
     const doneOp = () => {
       done();
     };
@@ -106,7 +106,7 @@ describe('DateRangePicker', () => {
     picker.open();
   });
 
-  it('Should call `onClose` callback', done => {
+  it('Should call `onClose` callback', (done) => {
     const doneOp = () => {
       done();
     };
@@ -141,11 +141,11 @@ describe('DateRangePicker', () => {
     assert.equal(instance.style.fontSize, fontSize);
   });
 
-  it('Should select a whole week', done => {
+  it('Should select a whole week', (done) => {
     let count = 0;
     let instance = null;
     let today = null;
-    const doneOp = values => {
+    const doneOp = (values) => {
       if (
         isSameDay(startOfWeek(new Date()), values[0]) &&
         isSameDay(endOfWeek(new Date()), values[1])
@@ -177,8 +177,8 @@ describe('DateRangePicker', () => {
     ReactTestUtils.Simulate.click(today);
   });
 
-  it('Should fire onChange if click ok after only select one date in oneTap mode', done => {
-    const doneOp = values => {
+  it('Should fire onChange if click ok after only select one date in oneTap mode', (done) => {
+    const doneOp = (values) => {
       if (
         isSameDay(startOfWeek(new Date()), values[0]) &&
         isSameDay(endOfWeek(new Date()), values[1])
@@ -215,12 +215,14 @@ describe('DateRangePicker', () => {
 
   it('Should have only one calendar', () => {
     const instance = getInstance(<DateRangePicker showOneCalendar open />);
+    const menuContainer = getDOMNode(instance.menuContainerRef.current);
 
-    assert.equal(
-      getDOMNode(instance.menuContainerRef.current).querySelectorAll(
-        '.rs-picker-daterange-calendar-single'
-      ).length,
-      1
+    assert.ok(
+      menuContainer
+        .querySelector('.rs-picker-daterange-panel')
+        .className.match(/\brs-picker-daterange-panel-show-one-calendar\b/)
     );
+
+    assert.equal(menuContainer.querySelectorAll('.rs-picker-daterange-calendar-single').length, 1);
   });
 });

@@ -16,7 +16,7 @@ import {
   endOfWeek,
   startOfMonth,
   endOfMonth,
-  compareAsc
+  compareAsc,
 } from 'date-fns';
 
 import IntlContext from '../IntlProvider/IntlContext';
@@ -30,7 +30,7 @@ import {
   PickerToggle,
   MenuWrapper,
   PickerToggleTrigger,
-  getToggleWrapperClassName
+  getToggleWrapperClassName,
 } from '../Picker';
 
 import { DateRangePickerProps, ValueType } from './DateRangePicker.d';
@@ -73,7 +73,7 @@ class DateRangePicker extends React.Component<DateRangePickerProps, DateRangePic
     onOk: PropTypes.func,
     disabledDate: PropTypes.func,
     onSelect: PropTypes.func,
-    showOneCalendar: PropTypes.bool
+    showOneCalendar: PropTypes.bool,
   };
   static defaultProps = {
     ...pickerDefaultProps,
@@ -95,8 +95,8 @@ class DateRangePicker extends React.Component<DateRangePickerProps, DateRangePic
       last7Days: 'Last 7 Days',
       hours: 'Hours',
       minutes: 'Minutes',
-      seconds: 'Seconds'
-    }
+      seconds: 'Seconds',
+    },
   };
   menuContainerRef: React.RefObject<any>;
   triggerRef: React.RefObject<any>;
@@ -118,7 +118,7 @@ class DateRangePicker extends React.Component<DateRangePickerProps, DateRangePic
       return {
         value,
         selectValue: value,
-        calendarDate: getCalendarDate(value)
+        calendarDate: getCalendarDate(value),
       };
     }
 
@@ -138,7 +138,7 @@ class DateRangePicker extends React.Component<DateRangePickerProps, DateRangePic
       doneSelected: true,
       calendarDate,
       hoverValue: [],
-      currentHoverDate: null
+      currentHoverDate: null,
     };
 
     // for test
@@ -248,7 +248,7 @@ class DateRangePicker extends React.Component<DateRangePickerProps, DateRangePic
     const calendarDate = getCalendarDate(selectValue);
     this.setState({
       selectValue,
-      calendarDate
+      calendarDate,
     });
   }
 
@@ -270,7 +270,7 @@ class DateRangePicker extends React.Component<DateRangePickerProps, DateRangePic
 
     this.setState({
       selectValue: nextValue || [],
-      value: nextValue
+      value: nextValue,
     });
 
     if (onChange && (!isSameDay(nextValue[0], value[0]) || !isSameDay(nextValue[1], value[1]))) {
@@ -316,14 +316,14 @@ class DateRangePicker extends React.Component<DateRangePickerProps, DateRangePic
       nextValue[1] = setTimingMargin(nextValue[1]);
 
       this.setState({
-        calendarDate: getCalendarDate(nextValue)
+        calendarDate: getCalendarDate(nextValue),
       });
     }
 
     const nextState = {
       doneSelected: !doneSelected,
       selectValue: nextValue as ValueType,
-      hoverValue: nextHoverValue as ValueType
+      hoverValue: nextHoverValue as ValueType,
     };
 
     event.persist();
@@ -355,7 +355,7 @@ class DateRangePicker extends React.Component<DateRangePickerProps, DateRangePic
     if (doneSelected && !_.isUndefined(hoverRange)) {
       this.setState({
         currentHoverDate: date,
-        hoverValue: nextHoverValue as ValueType
+        hoverValue: nextHoverValue as ValueType,
       });
       return;
     } else if (doneSelected) {
@@ -370,7 +370,7 @@ class DateRangePicker extends React.Component<DateRangePickerProps, DateRangePic
       nextValue = [
         isBefore(nextHoverValue[0], hoverValue[0]) ? nextHoverValue[0] : hoverValue[0],
         isAfter(nextHoverValue[1], hoverValue[1]) ? nextHoverValue[1] : hoverValue[1],
-        nextValue[2]
+        nextValue[2],
       ];
     }
 
@@ -381,11 +381,11 @@ class DateRangePicker extends React.Component<DateRangePickerProps, DateRangePic
 
     this.setState({
       currentHoverDate: date,
-      selectValue: nextValue
+      selectValue: nextValue,
     });
   };
 
-  handleClean = event => {
+  handleClean = (event) => {
     this.setState({ calendarDate: getCalendarDate() });
     this.updateValue(event, []);
   };
@@ -405,7 +405,7 @@ class DateRangePicker extends React.Component<DateRangePickerProps, DateRangePic
     this.setState({
       selectValue: value,
       calendarDate,
-      active: true
+      active: true,
     });
   };
 
@@ -416,7 +416,7 @@ class DateRangePicker extends React.Component<DateRangePickerProps, DateRangePic
   handleExit = () => {
     this.setState({
       active: false,
-      doneSelected: true
+      doneSelected: true,
     });
 
     this.props.onClose?.();
@@ -481,10 +481,13 @@ class DateRangePicker extends React.Component<DateRangePickerProps, DateRangePic
       limitEndYear,
       oneTap,
       showWeekNumbers,
-      showOneCalendar
+      showOneCalendar,
     } = this.props;
     const { calendarDate, selectValue, hoverValue, doneSelected } = this.state;
     const classes = classNames(this.addPrefix('daterange-menu'), menuClassName);
+    const panelClasses = classNames(this.addPrefix('daterange-panel'), {
+      [this.addPrefix('daterange-panel-show-one-calendar')]: showOneCalendar,
+    });
 
     const pickerProps = {
       isoWeek,
@@ -498,12 +501,12 @@ class DateRangePicker extends React.Component<DateRangePickerProps, DateRangePic
       onSelect: this.handleChangeSelectValue,
       onMouseMove: this.handleMouseMoveSelectValue,
       onChangeCalendarDate: this.handleChangeCalendarDate,
-      showOneCalendar
+      showOneCalendar,
     };
 
     return (
       <MenuWrapper className={classes} ref={this.menuContainerRef}>
-        <div className={this.addPrefix('daterange-panel')}>
+        <div className={panelClasses}>
           <div className={this.addPrefix('daterange-content')}>
             <div className={this.addPrefix('daterange-header')}>
               {this.getDateString(selectValue as ValueType)}
@@ -578,5 +581,5 @@ class DateRangePicker extends React.Component<DateRangePickerProps, DateRangePic
 }
 
 export default defaultProps({
-  classPrefix: 'picker'
+  classPrefix: 'picker',
 })(DateRangePicker);
